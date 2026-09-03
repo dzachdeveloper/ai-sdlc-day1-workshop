@@ -58,7 +58,16 @@ const server = Bun.serve({
   port,
   async fetch(request) {
     const url = new URL(request.url);
-    if (request.method === "OPTIONS") return json({}, 204);
+    if (request.method === "OPTIONS") {
+      return new Response(null, {
+        status: 204,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type",
+        },
+      });
+    }
 
     const file = await staticFile(url.pathname);
     if (file) return file;
