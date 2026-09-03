@@ -11,6 +11,7 @@ and is mounted here as a Git submodule.
 | `backend` | `backend/` | Bun API server with in-memory storage |
 | `frontend` | `frontend/` | Angular 19 web application |
 | `cli` | `cli/` | Zero-dependency Node 20+ CLI |
+| `bundle` | `bundle/` | Generated release: Bun server, web UI, and CLI |
 
 ## API contract
 
@@ -62,3 +63,10 @@ git push
 
 Use the same workflow with `frontend` or `cli`. The submodule commit and the
 superproject pointer update are separate commits.
+
+## Building the release bundle
+
+From `main`, run `node scripts/build-bundle.mjs` to update the source
+submodules and assemble the generated `bundle/` release. The script is
+idempotent and does not push by default. Use `node scripts/build-bundle.mjs
+--push` to publish the bundle branch and its updated pointer on `main`.
