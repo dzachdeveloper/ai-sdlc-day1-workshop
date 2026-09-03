@@ -1,0 +1,71 @@
+<main class="page-shell">
+  <div class="hero-glow" aria-hidden="true"></div>
+  <header class="hero">
+    <div class="brand"><span class="brand-mark">↗</span> snip</div>
+    <div class="eyebrow">Simple links. Beautifully shared.</div>
+    <h1>Turn long links into<br /><span>something memorable.</span></h1>
+    <p class="hero-copy">Paste a URL below and get a clean, shareable link in seconds.</p>
+
+    <form class="shorten-form" (ngSubmit)="shorten()">
+      <label class="sr-only" for="url">URL to shorten</label>
+      <input
+        id="url"
+        name="url"
+        type="url"
+        [(ngModel)]="url"
+        placeholder="Paste a link to shorten..."
+        autocomplete="url"
+      />
+      <button type="submit" [disabled]="loading()">
+        {{ loading() ? 'Shortening...' : 'Shorten link' }} <span>→</span>
+      </button>
+    </form>
+
+    @if (error()) {
+      <p class="notice error" role="alert">{{ error() }}</p>
+    }
+    @if (createdLink(); as link) {
+      <p class="notice success" role="status">
+        <span>Link ready:</span>
+        <a [href]="link.shortUrl" target="_blank" rel="noreferrer">{{ link.shortUrl }}</a>
+      </p>
+    }
+  </header>
+
+  <section class="links-card" aria-labelledby="links-heading">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">Your collection</p>
+        <h2 id="links-heading">Recent links</h2>
+      </div>
+      <span class="count">{{ links().length }} {{ links().length === 1 ? 'link' : 'links' }}</span>
+    </div>
+
+    @if (links().length) {
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Short link</th><th>Original URL</th><th>Hits</th></tr>
+          </thead>
+          <tbody>
+            @for (link of links(); track link.code) {
+              <tr>
+                <td><a class="code-link" [href]="link.shortUrl" target="_blank" rel="noreferrer">/{{ link.code }}</a></td>
+                <td class="original-url" [title]="link.url">{{ link.url }}</td>
+                <td class="hits">{{ link.hits }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    } @else {
+      <div class="empty-state">
+        <span class="empty-icon">✦</span>
+        <p>Your shortened links will appear here.</p>
+        <small>Start by pasting a URL above.</small>
+      </div>
+    }
+  </section>
+
+  <footer>Snip <span>·</span> A tiny link shortener</footer>
+</main>
