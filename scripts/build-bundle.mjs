@@ -1,8 +1,9 @@
 import { cpSync, existsSync, mkdirSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { execFileSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
 
-const root = resolve(import.meta.dirname, "..");
+const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const bundleDir = join(root, "bundle");
 const frontendDir = join(root, "frontend");
 const outputDir = join(frontendDir, "dist", "snip-frontend", "browser");
@@ -65,8 +66,9 @@ function hasStagedChanges(cwd) {
   try {
     runQuiet("git", ["diff", "--cached", "--quiet"], cwd);
     return false;
-  } catch {
-    return true;
+  } catch (error) {
+    if (error.status === 1) return true;
+    throw error;
   }
 }
 
